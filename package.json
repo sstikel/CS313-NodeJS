@@ -1,0 +1,16 @@
+{
+  "name": "rock",
+  "version": "1.0.0",
+  "description": "rock paper scissor",
+  "main": "Wk08.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sam",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  }
+}
