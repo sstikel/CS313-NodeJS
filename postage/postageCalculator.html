@@ -8,17 +8,19 @@
 </head>
 <body>
   <h1>Postage Calculator</h1>
-  <form action="" method="post">
-    Type<select name="type">
+  <form action="postageResult" method="post">
+    Type:<br>
+    <select name="type">
       <option value='' disabled selected>Choose...</option>
       <option>Letter (Stamped)</option>
       <option>Letter (Metered)</option>
       <option>Large Envelope(Flats)</option>
       <option>First-Class Package - Retail</option>
     </select>
-    <br>
-    Weight (oz.)<input type="number" name="qty">
-    <br>
+    <br><br>
+    Weight (oz.):<br>
+    <input type="number" name="weight">
+    <br><br>
     <input type="submit" value="Calculate">
   </form>
 </body>
