@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public")); //let all files in 'public' be used anyways
 app.use(express.static("postage"));
 
-app.post("/postageResult", postageResult);
+app.get("/postageResult", postageResult);
 
 app.listen(port, function () {
   console.log("Listening on port : " + port);
