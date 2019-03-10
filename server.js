@@ -29,14 +29,15 @@ function postageResult(request, response) {
   console.log("Called postageResult...");
 
   const type = request.query.type;
-  console.log("Type: " + type);
-
   const weight = request.query.weight;
-  console.log("Weight: " + weight);
+
+  const calculateRate = require('./public/JS/calculateRate');
+  let rate = calculateRate.calculateRate(type, weight);
 
   const params = {
     type: type,
-    weight: weight
+    weight: weight,
+    rate: rate
   };
 
   response.render("postageResult", params);
