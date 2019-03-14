@@ -1,0 +1,19 @@
+{
+  "name": "ta10pie",
+  "version": "1.0.0",
+  "description": "pie day",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pie",
+    "pi",
+    "3.14"
+  ],
+  "author": "Sam Gay",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
