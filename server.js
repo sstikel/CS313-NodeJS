@@ -23,8 +23,8 @@ app.use(express.static("postage"));
 app.get("/postageResult", postageResult);
 
 //LIBRARY
-app.get("/library", controller.libHome);//home
-app.get("/library/:id", controller.getLibrary);//display library
+app.get("/library", controller.libraryHome);//home
+//app.get("/library/:id", controller.getLibrary);//display library
 //login
 //logout
 //add to library

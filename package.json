@@ -12,5 +12,14 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sstikel/CS313-NodeJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sstikel/CS313-NodeJS/issues"
+  },
+  "homepage": "https://github.com/sstikel/CS313-NodeJS#readme"
 }
