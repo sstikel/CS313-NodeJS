@@ -10,6 +10,7 @@ const http = require("http");
 //const fs = require('fs');
 const express = require("express");
 const app = express();
+const controller = require("./library/controller/libraryController.js"); // ./ tells it to start in current dir
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
 
@@ -21,9 +22,19 @@ app.use(express.static("postage"));
 
 app.get("/postageResult", postageResult);
 
+//LIBRARY
+app.get("/library", controller.libHome);//home
+app.get("/library/:id", controller.getLibrary);//display library
+//login
+//logout
+//add to library
+
+//LISTENER
 app.listen(port, function () {
   console.log("Listening on port : " + port);
 });
+
+/////////////////////functions///////////////////////////
 
 function postageResult(request, response) {
   console.log("Called postageResult...");
