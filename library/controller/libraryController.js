@@ -32,5 +32,5 @@ function libraryHome(req, res) {
 
 
 module.exports = {
-  libraryHome: libraryHome
+  libraryHome: libraryHome,
 } //allows the above defined funtions to be used outside of this file
