@@ -20,16 +20,22 @@ app.set("view engine", "ejs");
 app.use(express.static("public")); //let all files in 'public' be used anyways
 app.use(express.static("postage"));
 
+// app.get("/home", function(){
+//   render("./public/home.html");
+// })
 app.get("/postageResult", postageResult);
 
 //LIBRARY
-app.get("/library", controller.libraryHome);//home
-//app.get("/library/:id", controller.getLibrary);//display library
+app.get("/libraryHome", controller.libraryHome);//home
+app.get("/library", controller.getLibrary);//display library
+//app.get("/library/:id", controller.getLibrary);
+//app.post("/library....") //add library item
+
 //login
 //logout
 //add to library
 
-//LISTENER
+//////////////////////LISTENER////////////////////////////
 app.listen(port, function () {
   console.log("Listening on port : " + port);
 });

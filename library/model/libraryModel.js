@@ -1,0 +1,92 @@
+/**********************************************************************
+ * File: libraryModel.js
+ * Author: Sam Gay
+ * Date: 3/21/19
+ * Purpose: handle data requests from server in regards to library
+ * web app for class.
+ **********************************************************************/
+
+ //Access db
+ const{Pool} = require("pg");
+ const dbURL = process.env.DATABASE_URL;
+const pool = new Pool({connectionString: dbURL});
+
+
+function getLibrary(callback){
+  // if (badThings == true) {
+  //   err = "Error getting the scriptures..."
+  //   callback(err, null);
+  // }
+
+  // pool.query("SELECT id, title, sub-title, rating FROM lib.library", function(err, result){
+  //   if(err){
+  //     callback(err, null);
+  //   }
+  //   else {
+  //     callback(null, results.rows);
+  //       }
+  // });
+
+  const libraryResults = [
+    {id: 1, type: "Book", title: "Rainbow Six"},
+    {id: 2, type: "DVD", title: "Braveheart"},
+    {id: 3, type: "CD", title: "Awake"},
+    {id: 4, type: "BR", title: "The Matrix"}
+  ]; //hard coded values instead of linking to db
+
+  callback(null, libraryResults);
+}
+
+//search
+function search(item, callback){
+  var sql = "SELECT id, title, sub-title, rating FROM lib.library WHERE item=$1::text";//TODO - likely need to join tables...
+  var params = [item];
+
+  // pool.query(sql, params, function(err, dbResults){
+  //   if(err){
+  //     throw err;
+  //   }
+  //   else {
+  //     var results = {
+  //       success: true,
+  //       list: dbResults.rows
+  //     };
+
+  //     callback(null, results);
+  //   }
+  // });
+
+  const searchResults = [
+    {id: 1, type: "Book", title: "Rainbow Six"},
+    {id: 2, type: "DVD", title: "Braveheart"},
+    {id: 3, type: "CD", title: "Awake"},
+    {id: 4, type: "BR", title: "The Matrix"}
+  ]; //hard coded values instead of linking to db
+  callback(null, searchResults);
+}
+
+//add
+function addItem(item, callback){
+  var result = {
+    success: true,
+    item: "need to update..."
+  };
+
+  callback(null, result);
+}
+
+//remove
+function removeItem(item, callback){
+  var result = {
+    success: true,
+    item: "need to update..."
+  };
+}
+
+
+module.exports = {
+  getLibrary: getLibrary,  
+  search: search,
+  addItem: addItem,
+  removeItem: removeItem
+};

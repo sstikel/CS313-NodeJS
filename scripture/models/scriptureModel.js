@@ -2,7 +2,7 @@
 // const conn = "something...";
 // pool = Pool({connectionSttrin: conn});
 
-function getAllScriptures(){
+function getAllScriptures(callback){
 
   // if (badThings == true) {
   //   err = "Error getting the scriptures..."
@@ -21,7 +21,7 @@ function getAllScriptures(){
   const scriptures = [
       {id: 1, book: "Helaman", chapter: 5, verse: 12},
       {id: 2, book: "John", chapter: 11, verse: 2},
-      {id: 3, book: "Ether", chapter: 12, verse: 62},
+      {id: 3, book: "Ether", chapter: 12, verse: 62}
     ];
 
   callback(null, scriptures);
