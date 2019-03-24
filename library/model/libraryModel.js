@@ -6,9 +6,9 @@
  * web app for class.
  **********************************************************************/
 
- //Access db
- const{Pool} = require("pg");
- const dbURL = process.env.DATABASE_URL;
+//Access db
+const{Pool} = require('pg');
+const dbURL = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: dbURL});
 
 
