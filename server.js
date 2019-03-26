@@ -7,7 +7,6 @@
  */
 
 const http = require("http");
-//const fs = require('fs');
 const express = require("express");
 const app = express();
 const controller = require("./library/controller/libraryController.js"); // ./ tells it to start in current dir
@@ -19,6 +18,7 @@ app.set("view engine", "ejs");
 
 app.use(express.static("public")); //let all files in 'public' be used anyways
 app.use(express.static("postage"));
+app.use(express.static("library/views"));
 
 // app.get("/home", function(){
 //   render("./public/home.html");
