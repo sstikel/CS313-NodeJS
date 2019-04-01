@@ -10,6 +10,7 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const controller = require("./library/controller/libraryController.js"); // ./ tells it to start in current dir
+require('dotenv').config();
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
 
@@ -32,7 +33,10 @@ app.get("/library", controller.getLibrary);//display library
 //app.post("/library....") //add library item
 
 //login
+app.get("/login", controller.login);
 //logout
+//createUser
+app.post("/createUser", controller.createUser);
 //add to library
 
 //////////////////////LISTENER////////////////////////////

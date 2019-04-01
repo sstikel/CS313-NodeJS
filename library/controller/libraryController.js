@@ -10,6 +10,7 @@ const model = require("../model/libraryModel.js");
 //login
 function login(req, res){
   //TODO
+  res.redirect("login.html");
 }
 
 //logout
@@ -40,7 +41,23 @@ function getLibrary(req, res){
     //}
   });
 
-  res.json(data);
+  
+  console.log("Called postageResult...");
+
+  const type = request.query.type;
+  const weight = request.query.weight;
+
+  const calculateRate = require('./public/JS/calculateRate');
+  let rate = calculateRate.calculateRate(type, weight);
+
+  const params = {
+    type: type,
+    weight: weight,
+    rate: rate
+  };
+
+  //res.json(data);
+  res.render("postageResult", params);
 }
 
 //search library
@@ -69,6 +86,20 @@ function removeItem(req, res){
 }
 
 
+//////////////// USER /////////////////////////////
+function createUser(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  console.log("controller: createUser...");
+
+  model.createUser(username, password, function(err, data){
+    
+  });
+
+  res.redirect("views/libraryHome.html");
+}
+
 
 
 module.exports = {
@@ -78,5 +109,6 @@ module.exports = {
   getLibrary: getLibrary,
   search: search,
   addItem: addItem,
-  removeItem: removeItem
+  removeItem: removeItem,
+  createUser: createUser
 } //allows the above defined funtions to be used outside of this file

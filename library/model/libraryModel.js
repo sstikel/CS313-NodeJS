@@ -8,10 +8,14 @@
 
 //Access db
 const{Pool} = require('pg');
-const dbURL = process.env.DATABASE_URL;
-const pool = new Pool({connectionString: dbURL});
+const express = require("express");
+const app = express();
+require('dotenv').config();
 
+const dbConnection = process.env.DATABASE_URL;
+const pool = Pool({connectionString: dbConnection});
 
+/////////////LIBRARY////////////////////////////////////
 function getLibrary(callback){
   // if (badThings == true) {
   //   err = "Error getting the scriptures..."
@@ -67,6 +71,9 @@ function search(item, callback){
 
 //add
 function addItem(item, callback){
+  const sql = "INSERT INTO ";
+  const params = [];
+
   var result = {
     success: true,
     item: "need to update..."
@@ -84,9 +91,31 @@ function removeItem(item, callback){
 }
 
 
+///////////////////// USERS ////////////////////////////////
+function createUser(username, password, callback){
+  const sql = "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id";
+  const params = [username, password];
+
+  pool.query(sql, params, function(err, result){
+    if (err){
+      console.log("Error while inserting into DB...");
+      console.log(err);
+
+      callback(err, null);
+    }
+    else {
+      console.log("DB insert complete...");
+      console.log(result.rows);
+
+      callback(null, result.rows);
+    }
+  });
+}
+
 module.exports = {
   getLibrary: getLibrary,  
   search: search,
   addItem: addItem,
-  removeItem: removeItem
+  removeItem: removeItem,
+  createUser: createUser
 };
