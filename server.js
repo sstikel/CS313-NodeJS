@@ -26,18 +26,18 @@ app.use(express.static("library/views"));
 // })
 app.get("/postageResult", postageResult);
 
-//LIBRARY
+////////////////////LIBRARY///////////////////////////////////////////
 app.get("/libraryHome", controller.libraryHome);//home
 app.get("/library", controller.getLibrary);//display library
 //app.get("/library/:id", controller.getLibrary);
 //app.post("/library....") //add library item
 
 //login
-app.get("/login", controller.login);
+app.post("/login", controller.login);
 //logout
+app.post("/logout", controller.logout);
 //createUser
 app.post("/createUser", controller.createUser);
-//add to library
 
 //////////////////////LISTENER////////////////////////////
 app.listen(port, function () {

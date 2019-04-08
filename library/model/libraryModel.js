@@ -92,6 +92,17 @@ function removeItem(item, callback){
 
 
 ///////////////////// USERS ////////////////////////////////
+//login
+function login(username, password, callback){
+
+}
+
+//logout
+function logout(callback){
+
+}
+
+//createuser
 function createUser(username, password, callback){
   const sql = "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id";
   const params = [username, password];
@@ -117,5 +128,7 @@ module.exports = {
   search: search,
   addItem: addItem,
   removeItem: removeItem,
-  createUser: createUser
+  createUser: createUser,
+  login: login,
+  logout: logout
 };

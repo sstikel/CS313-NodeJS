@@ -6,21 +6,10 @@
  *******************************************************/
 const model = require("../model/libraryModel.js");
 
-
-//login
-function login(req, res){
-  //TODO
-  res.redirect("login.html");
-}
-
-//logout
-function logout(req, res){
-  //TODO
-}
-
 //display home
 function libraryHome(req, res) {
  //process.location.href("../views/libraryHome.html"); //TODO - href not working
+ res.redirect("libraryHome.html");
 }
 
 //display library - make user specific
@@ -87,6 +76,19 @@ function removeItem(req, res){
 
 
 //////////////// USER /////////////////////////////
+//login
+function login(req, res){
+  //TODO
+  res.redirect("libraryHome.html");
+}
+
+//logout
+function logout(req, res){
+  //TODO
+  res.redirect("libraryHome.html");
+}
+
+//Createuser
 function createUser(req, res) {
   const username = req.body.username;
   const password = req.body.password;
@@ -94,10 +96,15 @@ function createUser(req, res) {
   console.log("controller: createUser...");
 
   model.createUser(username, password, function(err, data){
-    
+    res.redirect("views/libraryHome.html");  
   });
 
-  res.redirect("views/libraryHome.html");
+  
+}
+
+///////////////////Library Home HTML//////////////////////////
+function btnLogin(){
+  window.location.href("../views/login.html")
 }
 
 
