@@ -15,6 +15,8 @@ require('dotenv').config();
 const dbConnection = process.env.DATABASE_URL;
 const pool = Pool({connectionString: dbConnection});
 
+var bcrypt = require('bcrypt');
+
 /////////////LIBRARY////////////////////////////////////
 function getLibrary(callback){
   // if (badThings == true) {
@@ -104,8 +106,13 @@ function login(username, password, callback){
       console.log(err);
     }
     else{
-      //TODO hash password
-      //TODO compare hPassword
+      comparePassword = function(password, h_password, callback) {
+        bcrypt.compare(password, h_password, function(err, isMatch) {   
+            return err == null ?
+                callback(null, isMatch) :
+                callback(err);
+        });
+     };
 
       callback(null, result.rows);
     }
@@ -119,9 +126,20 @@ function logout(callback){
 
 //createuser
 function createUser(username, password, name_first, name_last, callback){
-  const sql = "INSERT INTO users (username, password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
-  //TODO hash password
-  const params = [username, password, name_first, name_last];
+
+  const h_password = function(password, callback) {
+    bcrypt.genSalt(10, function(err, salt) {
+     if (err) 
+       return callback(err);
+ 
+     bcrypt.hash(password, salt, function(err, hash) {
+       return callback(err, hash);
+     });
+   });
+ };
+
+  const sql = "INSERT INTO users (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
+  const params = [username, h_password, name_first, name_last];
 
   pool.query(sql, params, function(err, result){
     if (err){
