@@ -21,6 +21,9 @@ app.use(express.static("public")); //let all files in 'public' be used anyways
 app.use(express.static("postage"));
 app.use(express.static("library/views"));
 
+app.use(express.urlencoded());
+app.use(express.json());
+
 app.get("/home", function(req, res){
   res.redirect("home.html");
 })
