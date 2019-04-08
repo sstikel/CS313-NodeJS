@@ -122,7 +122,7 @@ function createUser(req, res) {
   console.log("controller: createUser...");
 
   model.createUser(username, password, name_first, name_last, function(err, data){
-    res.redirect("views/libraryHome.html");  
+    res.redirect("libraryHome.html");  
   });
 
   

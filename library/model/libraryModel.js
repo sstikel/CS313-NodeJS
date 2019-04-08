@@ -127,16 +127,10 @@ function logout(callback){
 //createuser
 function createUser(username, password, name_first, name_last, callback){
 
-  const h_password = function(password, callback) {
-    bcrypt.genSalt(10, function(err, salt) {
-     if (err) 
-       return callback(err);
- 
-     bcrypt.hash(password, salt, function(err, hash) {
-       return callback(err, hash);
-     });
-   });
- };
+  //const h_password = 
+  hashPassword(password, function(err, result){
+    const h_password = result;
+  });
 
   const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
   const params = [username, h_password, name_first, name_last];
@@ -156,6 +150,23 @@ function createUser(username, password, name_first, name_last, callback){
     }
   });
 }
+
+
+/////////////////// PASSWORD HASH ////////////////////
+//HASH
+//exports.h_password = 
+function hashPassword(password, callback) {
+  bcrypt.genSalt(10, function(err, salt) {
+   if (err) 
+     return callback(err);
+
+   bcrypt.hash(password, salt, function(err, h_password) {
+     return callback(err, h_password);
+   });
+ });
+};
+
+//COMPARE
 
 module.exports = {
   getLibrary: getLibrary,  
