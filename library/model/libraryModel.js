@@ -97,25 +97,23 @@ function removeItem(item, callback){
 //login
 function login(username, password, callback){
   const sql = "SELECT id, username, h_password FROM lib.user";
-  //TODO add WHERE username = username
+  
   const params = [username, password];
 
   pool.query(sql, params, function(err, result){
     if (err) {
       console.log("Error with DB(login).");
       console.log(err);
+      callback(err, null);
     }
-    else{
-      comparePassword = function(password, h_password, callback) {
-        bcrypt.compare(password, h_password, function(err, isMatch) {   
-            return err == null ?
-                callback(null, isMatch) :
-                callback(err);
-        });
-     };
-
-      callback(null, result.rows);
-    }
+    
+    const user = result.rows[0];
+    bcrypt.compare(password, user.h_password, function(err, res){
+      if (res)
+        callback(null, result.rows);
+      else
+        callback("No match", null);
+    });
   });
 }
 
@@ -126,44 +124,33 @@ function logout(callback){
 
 //createuser
 function createUser(username, password, name_first, name_last, callback){
+  
+  bcrypt.hash(password, 10, (err, h_password) => {
 
-  var h_password = hashPassword(password, callback);
+    const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
+    const params = [username, h_password, name_first, name_last];
 
-  const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
-  const params = [username, h_password(hashPassword), name_first, name_last];
-
-  pool.query(sql, params, function(err, result){
-    if (err){
-      console.log("Error while inserting into DB...");
-      console.log(err);
-
-      callback(err, null);
-    }
-    else {
-      console.log("DB insert complete...");
-      console.log(result.rows);
-
-      callback(null, result.rows);
-    }
+    pool.query(sql, params, function(err, result){
+      if (err){
+        console.log("Error while inserting into DB...");
+        console.log(err);
+  
+        callback(err, null);
+      }
+      else {
+        console.log("DB insert complete...");
+        console.log(result.rows);
+  
+        callback(null, result.rows);
+      }
+    });
   });
+  
+  
+
+ 
 }
 
-
-/////////////////// PASSWORD HASH ////////////////////
-//HASH
-//exports.h_password = 
-function hashPassword(password, callback) {
-  bcrypt.genSalt(10, function(err, salt) {
-   if (err) 
-     return callback(err);
-
-   bcrypt.hash(password, salt, function(err, hash) {
-     return callback(err, hash);
-   });
- });
-};
-
-//COMPARE
 
 module.exports = {
   getLibrary: getLibrary,  
