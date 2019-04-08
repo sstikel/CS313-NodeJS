@@ -138,7 +138,7 @@ function createUser(username, password, name_first, name_last, callback){
    });
  };
 
-  const sql = "INSERT INTO users (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
+  const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
   const params = [username, h_password, name_first, name_last];
 
   pool.query(sql, params, function(err, result){
