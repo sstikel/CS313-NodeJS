@@ -127,7 +127,7 @@ function logout(callback){
 //createuser
 function createUser(username, password, name_first, name_last, callback){
 
-  var h_password = function(callback){
+  var h_password = function(password, callback){
     callback(password);
   };
 
@@ -159,8 +159,8 @@ function hashPassword(password, callback) {
    if (err) 
      return callback(err);
 
-   bcrypt.hash(password, salt, function(err, h_password) {
-     return callback(err, h_password);
+   bcrypt.hash(password, salt, function(err, hash) {
+     return callback(err, hash);
    });
  });
 };
