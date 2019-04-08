@@ -5,7 +5,7 @@
 *Purpose: javascript for libraryHome.html and login.html
 *******************************************/
 
-///////////////////Library Home HTML//////////////////////////
+///////////////////Library Home //////////////////////////
 function btnLogin(){
   console.log("Button clicked: login")
   window.location.href = "/login";

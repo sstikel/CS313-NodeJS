@@ -96,7 +96,7 @@ function removeItem(item, callback){
 ///////////////////// USERS ////////////////////////////////
 //login
 function login(username, password, callback){
-  const sql = "SELECT id, username, h_password FROM lib.user";
+  const sql = "SELECT id, username, h_password name_first, name_last FROM lib.user";
   
   const params = [username, password];
 
@@ -117,10 +117,6 @@ function login(username, password, callback){
   });
 }
 
-//logout
-function logout(callback){
-
-}
 
 //createuser
 function createUser(username, password, name_first, name_last, callback){
@@ -158,6 +154,5 @@ module.exports = {
   addItem: addItem,
   removeItem: removeItem,
   createUser: createUser,
-  login: login,
-  logout: logout
+  login: login
 };

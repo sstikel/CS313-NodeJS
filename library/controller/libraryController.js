@@ -9,7 +9,6 @@ const model = require("../model/libraryModel.js");
 
 //display home
 function libraryHome(req, res) {
- //process.location.href("../views/libraryHome.html"); //TODO - href not working
  res.redirect("libraryHome.html");
 }
 
@@ -31,23 +30,9 @@ function getLibrary(req, res){
     //}
   });
 
-  
-  // console.log("Called postageResult...");
-
-  // const type = request.query.type;
-  // const weight = request.query.weight;
-
-  // const calculateRate = require('./public/JS/calculateRate');
-  // let rate = calculateRate.calculateRate(type, weight);
-
-  // const params = {
-  //   type: type,
-  //   weight: weight,
-  //   rate: rate
-  //};
 
   //res.json(data);
-  res.render("postageResult", params);
+  //res.render("", params);
 }
 
 //search library
@@ -92,23 +77,18 @@ function handleLogin(req, res){
       console.log(err);
     }
     else {
-    res.redirect("libraryHome.html");
+      req.session.username = username;
+
+      res.redirect("libraryHome.html");
     }
   });  
 }
 
 //logout
 function logout(req, res){
-  model.logout(function(err, data){
-    if (err){
-      console.log("Error with logout...");
-      console.log(err);
-    }
-    else{
-      res.redirect("libraryHome.html");
-    }
-  });
-  //TODO
+  if(req.session.username) {
+    req.session.destroy();
+  }
   res.redirect("libraryHome.html");
 }
 

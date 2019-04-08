@@ -10,6 +10,7 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const controller = require("./library/controller/libraryController.js"); // ./ tells it to start in current dir
+const session = require('express-session');
 require('dotenv').config();
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
@@ -23,18 +24,22 @@ app.use(express.static("library/views"));
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(bodyParser.json());
 
 app.get("/home", function(req, res){
   res.redirect("home.html");
 })
+
+//////////////////// POSTAL ///////////////////////////////////////////
 app.get("/postageResult", postageResult);
 
-////////////////////LIBRARY///////////////////////////////////////////
+//////////////////// LIBRARY ///////////////////////////////////////////
 app.get("/libraryHome", controller.libraryHome);//home
 app.get("/library", controller.getLibrary);//display library
 //app.get("/library/:id", controller.getLibrary);
 //app.post("/library....") //add library item
 
+//////////////////// USERS /////////////////////////////////////////
 //login
 app.get("/login", controller.login);
 app.post("/login", controller.handleLogin);
@@ -43,13 +48,14 @@ app.get("/logout", controller.logout);
 //createUser
 app.post("/createUser", controller.createUser);
 
-//////////////////////LISTENER////////////////////////////
+////////////////////// LISTENER ////////////////////////////
 app.listen(port, function () {
   console.log("Listening on port : " + port);
 });
 
-/////////////////////functions///////////////////////////
 
+/////////////////////functions///////////////////////////
+////////// Postal //////////////////
 function postageResult(request, response) {
   console.log("Called postageResult...");
 
