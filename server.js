@@ -21,9 +21,9 @@ app.use(express.static("public")); //let all files in 'public' be used anyways
 app.use(express.static("postage"));
 app.use(express.static("library/views"));
 
-// app.get("/home", function(){
-//   render("./public/home.html");
-// })
+app.get("/home", function(req, res){
+  res.redirect("home.html");
+})
 app.get("/postageResult", postageResult);
 
 ////////////////////LIBRARY///////////////////////////////////////////
@@ -33,9 +33,10 @@ app.get("/library", controller.getLibrary);//display library
 //app.post("/library....") //add library item
 
 //login
-app.post("/login", controller.login);
+app.get("/login", controller.login);
+app.post("/login", controller.handleLogin);
 //logout
-app.post("/logout", controller.logout);
+app.get("/logout", controller.logout);
 //createUser
 app.post("/createUser", controller.createUser);
 

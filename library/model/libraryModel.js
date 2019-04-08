@@ -94,7 +94,22 @@ function removeItem(item, callback){
 ///////////////////// USERS ////////////////////////////////
 //login
 function login(username, password, callback){
+  const sql = "SELECT id, username, h_password FROM lib.user";
+  //TODO add WHERE username = username
+  const params = [username, password];
 
+  pool.query(sql, params, function(err, result){
+    if (err) {
+      console.log("Error with DB(login).");
+      console.log(err);
+    }
+    else{
+      //TODO hash password
+      //TODO compare hPassword
+
+      callback(null, result.rows);
+    }
+  });
 }
 
 //logout
@@ -103,9 +118,10 @@ function logout(callback){
 }
 
 //createuser
-function createUser(username, password, callback){
-  const sql = "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id";
-  const params = [username, password];
+function createUser(username, password, name_first, name_last, callback){
+  const sql = "INSERT INTO users (username, password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
+  //TODO hash password
+  const params = [username, password, name_first, name_last];
 
   pool.query(sql, params, function(err, result){
     if (err){
