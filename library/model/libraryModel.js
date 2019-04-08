@@ -127,9 +127,10 @@ function logout(callback){
 //createuser
 function createUser(username, password, name_first, name_last, callback){
 
-  //const h_password = 
-  hashPassword(password, function(err, result){
-    const h_password = result;
+  const h_password = hashPassword(password, function(err, result){
+    if (err){
+      console.log("Hash error (create user)");
+    }
   });
 
   const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
