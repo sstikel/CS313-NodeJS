@@ -127,14 +127,12 @@ function logout(callback){
 //createuser
 function createUser(username, password, name_first, name_last, callback){
 
-  const h_password = hashPassword(password, function(err, result){
-    if (err){
-      console.log("Hash error (create user)");
-    }
-  });
+  var h_password = function(callback){
+    callback(password);
+  };
 
   const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4) RETURNING id";
-  const params = [username, h_password, name_first, name_last];
+  const params = [username, h_password(hashPassword), name_first, name_last];
 
   pool.query(sql, params, function(err, result){
     if (err){
