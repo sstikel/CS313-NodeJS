@@ -23,11 +23,16 @@ function getLibrary(callback){
   //var params = [...];
 
   pool.query(sql, function(err, result){
+    if(err){
+
+    }
+    else {
     var results = {
                     success:true,
                     list:result.rows
                     };
     callback(null, results)
+          }
   });
 
   // pool.query("SELECT id, title, sub-title, rating FROM lib.library", function(err, result){

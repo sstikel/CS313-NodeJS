@@ -14,7 +14,7 @@ function btnLogin(){
 ///////////////////// Display Library /////////////////
 function displayLibrary(){
   $.get("/getLibrary", {library:library}, function(result){
-    for (var i=0;i < result.list.length; i++) {
+    for (var i=0; i < result.list.length; i++) {
       var library = result.list[i];
 
       $("#library").append("<li>" + library.title + " " + library.subtitle + " " + library.length +"</li>");

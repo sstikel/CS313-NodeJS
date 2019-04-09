@@ -15,12 +15,10 @@ function libraryHome(req, res) {
 //display library - make user specific
 function getLibrary(req, res){
   model.getLibrary(function(err, libraryResults){
-    var library = req.query.library;
+    //var library = req.query.library;
 
-    model.getLibrary(function(err, result){
-      res.json(result);
-    });
-    
+      res.json(libraryResults);
+   
     
     
     // if(req.session.username){
