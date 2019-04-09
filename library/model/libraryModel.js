@@ -120,6 +120,7 @@ function login(username, password, callback){
   //     else
   //       callback("No match", null);
   //   });
+    callback(null, null);
    });
 }
 
