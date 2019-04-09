@@ -13,13 +13,13 @@ const app = express();
 require('dotenv').config();
 
 const dbConnection = process.env.DATABASE_URL;
-const pool = Pool({connectionString: dbConnection});
+const pool = new Pool({connectionString: dbConnection});
 
 var bcrypt = require('bcrypt');
 
 /////////////LIBRARY////////////////////////////////////
 function getLibrary(callback){
-  var sql = "SELECT id, title, sub_title, rating, genre, format, length FROM lib.library"; //TODO needs join...
+  var sql = "SELECT id, title, sub_title, rating, genre, year, format, length FROM lib.library"; //TODO needs join...
   //var params = [...];
 
   pool.query(sql, function(err, result){
