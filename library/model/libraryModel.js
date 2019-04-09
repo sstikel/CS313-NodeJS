@@ -20,9 +20,9 @@ var bcrypt = require('bcrypt');
 /////////////LIBRARY////////////////////////////////////
 function getLibrary(callback){
   var sql = "SELECT id, title, sub_title, rating, genre, year, format, length FROM lib.library"; //TODO needs join...
-  var params = [username, h_password];
+  //var params = [username, h_password];
 
-  pool.query(sql, params, function(err, result){
+  pool.query(sql, function(err, result){
     if(err){
 
     }
