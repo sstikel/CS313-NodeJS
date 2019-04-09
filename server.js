@@ -32,7 +32,7 @@ app.use(express.static("library/views"));
 
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 app.get("/home", function(req, res){
   res.redirect("home.html");
