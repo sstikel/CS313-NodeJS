@@ -78,9 +78,9 @@ function handleLogin(req, res){
       console.log(err);
     }
     else {
-      req.session.username = username;
+      //req.session.username = username;
 
-      res.redirect("/displayLibrary.html");
+      res.redirect("displayLibrary.html");
     }
   });  
 }
