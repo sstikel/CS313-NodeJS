@@ -15,19 +15,20 @@ function libraryHome(req, res) {
 //display library - make user specific
 function getLibrary(req, res){
   model.getLibrary(function(err, libraryResults){
-    // if (err){
-    //   data = {
-    //     success: false,
-    //     message: err
-    //   };
-    //   res.status(500).json(data);
-    // }
-    // else{
-      data = {
-        success: true,
-        libraryResults: libraryResults
-      };
+    var library = req.query.library;
+
+    model.getLibrary(function(err, result){
+      res.json(result);
+    });
+    
+    
+    
+    // if(req.session.username){
+    //   model.getLibrary(function(result){
+    //     res.sendFile('libraryHome.html');
+    //   });
     //}
+    
   });
 
 
@@ -79,7 +80,7 @@ function handleLogin(req, res){
     else {
       req.session.username = username;
 
-      res.redirect("libraryHome.html");
+      res.redirect("/displayLibrary.html");
     }
   });  
 }

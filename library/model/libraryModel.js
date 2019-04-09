@@ -19,10 +19,16 @@ var bcrypt = require('bcrypt');
 
 /////////////LIBRARY////////////////////////////////////
 function getLibrary(callback){
-  // if (badThings == true) {
-  //   err = "Error getting the scriptures..."
-  //   callback(err, null);
-  // }
+  var sql = "SELECT id, title, sub_title, rating, genre, format, length FROM lib.library"; //TODO needs join...
+  //var params = [...];
+
+  pool.query(sql, function(err, result){
+    var results = {
+                    success:true,
+                    list:result.rows
+                    };
+    callback(null, results)
+  });
 
   // pool.query("SELECT id, title, sub-title, rating FROM lib.library", function(err, result){
   //   if(err){
@@ -33,14 +39,14 @@ function getLibrary(callback){
   //       }
   // });
 
-  const libraryResults = [
-    {id: 1, type: "Book", title: "Rainbow Six"},
-    {id: 2, type: "DVD", title: "Braveheart"},
-    {id: 3, type: "CD", title: "Awake"},
-    {id: 4, type: "BR", title: "The Matrix"}
-  ]; //hard coded values instead of linking to db
+  // const libraryResults = [
+  //   {id: 1, type: "Book", title: "Rainbow Six"},
+  //   {id: 2, type: "DVD", title: "Braveheart"},
+  //   {id: 3, type: "CD", title: "Awake"},
+  //   {id: 4, type: "BR", title: "The Matrix"}
+  // ]; //hard coded values instead of linking to db
 
-  callback(null, libraryResults);
+  // callback(null, libraryResults);
 }
 
 //search

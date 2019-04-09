@@ -10,7 +10,15 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const controller = require("./library/controller/libraryController.js"); // ./ tells it to start in current dir
-const session = require('express-session');
+app.use(require('morgan')('dev'));
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
+app.use(session({
+  name: 'server-session-cookie-id',
+  secret: 'my express secret',
+  saveUninitialized: true,
+  resave: true,
+  store: new FileStore()}));
 require('dotenv').config();
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
