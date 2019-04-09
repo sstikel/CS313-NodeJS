@@ -113,14 +113,14 @@ function login(username, password, callback){
       callback(err, null);
     }
     
-    const user = result.rows[0];
-    bcrypt.compare(password, user.h_password, function(err, res){
-      if (res)
-        callback(null, result.rows);
-      else
-        callback("No match", null);
-    });
-  });
+  //   const user = result.rows[0];
+  //   bcrypt.compare(password, user.h_password, function(err, res){
+  //     if (res)
+  //       callback(null, result.rows);
+  //     else
+  //       callback("No match", null);
+  //   });
+   });
 }
 
 
