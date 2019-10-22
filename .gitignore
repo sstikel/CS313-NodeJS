@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 .env
 sessions/
+node-js-getting-started/
