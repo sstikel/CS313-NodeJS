@@ -21,14 +21,6 @@ app.use(session({
   store: new FileStore()}));
 require('dotenv').config();
 
-//Heroku pg db access - 10/22/19
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
-});
-//end
-
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
 
 app.set("views", "views");
