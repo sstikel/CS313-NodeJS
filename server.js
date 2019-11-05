@@ -76,7 +76,7 @@ app.get('/db', async (req, res) => {
 ////  LIBRARY API ////
 //GET//
 //return full library
-app.get("/api/item", function(req, res){
+app.get("/api/item", async (req, res) => {
   try{
     //TODO - verify login info
     //TODO - sanatize input
@@ -95,7 +95,7 @@ app.get("/api/item", function(req, res){
 });
 
 //return specific library item
-app.get("/api/item/:id", function(req, res){
+app.get("/api/item/:id", async (req, res) => {
     //TODO - verify login info
     //TODO - sanatize input
     //TODO - query db for item
@@ -105,7 +105,7 @@ app.get("/api/item/:id", function(req, res){
 });
 
 //return general search for specific item
-app.get("/api/item/:param", function(req, res){
+app.get("/api/item/:param", async (req, res) => {
     //TODO - verify login info
     //TODO - sanatize input
     //TODO - request item search results from external api
@@ -117,7 +117,7 @@ app.get("/api/item/:param", function(req, res){
 
 //POST//
 //create library item
-app.post("/api/item", function(req, res){
+app.post("/api/item", async (req, res) => {
   try{
     //TODO - verify login info
     //TODO - sanatize input
@@ -135,7 +135,7 @@ app.post("/api/item", function(req, res){
 
 //PUT//
 //TODO - update quantity of user item
-app.put("/api/item/:id", function(req, res){
+app.put("/api/item/:id", async (req, res) => {
   try{
     //TODO - verify login info
     //TODO - sanatize input
@@ -151,7 +151,7 @@ app.put("/api/item/:id", function(req, res){
 
 //DELETE//
 //TODO - delete library item
-app.delete("/api/item/:id", function(req, res){
+app.delete("/api/item/:id", async (req, res) => {
     //TODO - verify login info
     //TODO - sanatize input
     //TODO - query db: delete user's item row in composite key table
@@ -167,12 +167,20 @@ app.delete("/api/item/:id", function(req, res){
 
 //////////////////// USERS /////////////////////////////////////////
 //login
-app.get("/login", controller.login);
-app.post("/login", controller.handleLogin);
+app.get("/api/user/login", async (req, res) => {
+  //TODO - retrieve login info from req
+  //TODO - redirect to Heroku OAuth API
+    //GET https://id.heroku.com/oauth/authorize?client_id={client-id}&response_type=code&scope={scopes}&state={anti-forgery-token}
+  //TODO - return result (including cookie)
+
+});
+//end login
 //logout
-app.get("/logout", controller.logout);
-//createUser
-app.post("/createUser", controller.createUser);
+
+//end logout
+//create user
+
+//end create user
 //////////////////// END USERS /////////////////////////////////////////
 
 ////////////////////// LISTENER ////////////////////////////
