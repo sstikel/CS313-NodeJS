@@ -2,39 +2,25 @@
  * Doc: server.js
  * Author: Sam Gay
  * Date: 10/22/19
- * Purpose: 
+ * Purpose: Manage requests for library items. Includes uploading info, deleting info, retrieving info, 
+ * adding and modifying users, etc.
  * 
  */
 
 const http = require("http");
 const express = require("express");
+const router = express.Router();
 const bodyParser = require("body-parser");
-const pgDB = require("pg");
+const{Pool} = require('pg');
+//const pgDB = require("pg");
+var conString = 'postgres://@localhost/pg_demo_db';
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
-var LIBRARY_DATA = "lib.library"; //TODO - how is this used??
-var db;
 var app = express();
 app.use(bodyParser.json());
 
 ////db connection ////
-//TODO - broken here. appears to be a mongo styled request
-//TODO - Change to mongodb????
-pgDB.???``.connect(process.env.DATABASE_URL, function(err, client){
-  if(err){
-    console.log(err);
-    process.exit(1);
-  }
-
-  db = client.db();
-  console.log("Db connection created.");
-
-  var server = app.listen(process.env.PORT, function(){
-    var port = server.address().port;
-    console.log("Running on ", port);
-  });
-});
-
 ////session////
 app.use(require('morgan')('dev'));
 var session = require('express-session');
@@ -62,8 +48,6 @@ var db;
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
 
-
-
 app.use(express.urlencoded());
 app.use(express.json());
 
@@ -73,11 +57,6 @@ app.get("/home", function(req, res){
 })
 
 //////////////////// LIBRARY ///////////////////////////////////////////
-app.get("/libraryHome", controller.libraryHome);//home
-app.get("/library", controller.getLibrary);//display library
-//app.get("/library/:id", controller.getLibrary);
-//app.post("/library....") //add library item
-
 // - 10/22/19
 app.get('/db', async (req, res) => {
   try {
@@ -88,7 +67,7 @@ app.get('/db', async (req, res) => {
     client.release();
   } catch (err) {
     console.error(err);
-    res.send("Error " + err);
+    res.send("Error: " + err);
   }
 })
 //https://devcenter.heroku.com/articles/getting-started-with-nodejs#provision-a-database
@@ -98,36 +77,85 @@ app.get('/db', async (req, res) => {
 //GET//
 //return full library
 app.get("/api/item", function(req, res){
-  
+  try{
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - query db for items
+    //TODO - request items' info from external api(s)
+        //- title
+        //- author
+        //- format
+        //- publish date
+    //TODO - return results
+  }
+  catch(err){
+    console.error(err);
+    res.send("Error: " + err); //TODO - edit response for presentation to user
+  }
 });
 
 //return specific library item
 app.get("/api/item/:id", function(req, res){
-  
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - query db for item
+    //TODO - request item info from external api
+    //TODO - return result
+      //- only include items found in user library
 });
 
-//TODO - return friend's full library
-//TODO - return friend's specific library item
+//return general search for specific item
+app.get("/api/item/:param", function(req, res){
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - request item search results from external api
+    //TODO - query db for item search results in user library
+    //TODO - return result
+});
+
 //END GET//
 
 //POST//
 //create library item
 app.post("/api/item", function(req, res){
-  
+  try{
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - query db
+      //- check if item exists; if not, add to library table
+        //- request proper info from external API
+      //- create row in composite key table; include user PK and item PK
+    //TODO - return result
+  }
+  catch(err){
+
+  }
 });
 //END POST//
 
 //PUT//
-//TODO - update library item
+//TODO - update quantity of user item
 app.put("/api/item/:id", function(req, res){
-  
+  try{
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - query db: update user quantity
+    //TODO - return result
+
+  }
+  catch(err){
+
+  }
 });
 //END PUT//
 
 //DELETE//
 //TODO - delete library item
 app.delete("/api/item/:id", function(req, res){
-  
+    //TODO - verify login info
+    //TODO - sanatize input
+    //TODO - query db: delete user's item row in composite key table
+    //TODO - return result
 });
 //END DELETE//
 
