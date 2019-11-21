@@ -363,7 +363,7 @@ app.get("/api/user/logout", async (req, res) => {
 //end logout
 //create user
 app.put("/api/user/newuser", async (req, res) => {
-  try{
+  /*try{
     let inserted = false;
     var hash = "";
     //TODO - sanatize input
@@ -399,7 +399,7 @@ app.put("/api/user/newuser", async (req, res) => {
     console.log("Error with new user on API");
     console.log(err);
     res.send("Error creating new user;")
-  }
+  }*/
 });
 //end create user
 //////////////////// END USERS /////////////////////////////////////////

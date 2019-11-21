@@ -15,9 +15,9 @@ ALTER TABLE lib.library
 ALTER COLUMN author TYPE VARCHAR;
 
 CREATE TABLE lib.lookup(
-  user_id INT4 NOT NULL,
-  item_id INT4 NOT NULL,
-  qty INT4 
+  user_id INT NOT NULL REFERENCES lib.user(id),
+  item_id INT NOT NULL REFERENCES lib.library(id),
+  qty INT 
 );
 
 
@@ -27,6 +27,3 @@ DROP TABLE lib.genre;
 
 DROP TABLE lib.author;
 
-ALTER TABLE lib.lookup
-ALTER COLUMN user_id REFERENCES lib.user(id),
-ALTER COLUMN item_id REFERENCES lib.library(id);
