@@ -93,14 +93,14 @@ app.get("/api/book", async (req, res) => {
       break;
     }
       
-    //TODO - query db for items
-    let sql = "SELECT title, sub_title, author, year, isbn, qty " +
+    //query db for items
+    let sql = "SELECT lib.library.title, lib.library.sub_title, lib.library.author, lib.library.year, lib.library.isbn, lib.lookup.qty " +
               "FROM lib.lookup LEFT INNER JOIN lib.library ON (lib.lookup.user = lib.library.user)" +
               "WHERE user = " + sess + ";";
 
     const result = await pool.query(sql);
     let json = JSON.stringify(result);
-    //TODO - return result
+    //return result
       res.send(json);
   }
   catch(err){
@@ -113,7 +113,7 @@ app.get("/api/book", async (req, res) => {
 //return specific library item
 app.get("/api/book/:id", async (req, res) => {
   try{
-    //TODO - verify login info
+    //verify login info
     if(req.session)
       let sess = req.session.cookie.path;
     else{
@@ -167,6 +167,7 @@ app.get("/api/book/:param", async (req, res) => {
 
 //END GET//
 
+/*
 //POST//
 //create library item
 app.post("/api/item", async (req, res) => {
@@ -184,12 +185,14 @@ app.post("/api/item", async (req, res) => {
   }
 });
 //END POST//
+*/
 
 //PUT//
-//TODO - update quantity of user item
+//create library item
+//update quantity of user item
 app.put("/api/item/:id", async (req, res) => {
   try{
-    //TODO - verify login info
+    //verify login info
     if(req.session)
       let sess = req.session.cookie.path;
     else{
@@ -198,11 +201,11 @@ app.put("/api/item/:id", async (req, res) => {
     }
     //TODO - sanitize input
 
-    //TODO - query db: 
+    //query db: 
     let isbn = req.session.cookie.path;
     let sql = "SELECT title, isbn FROM lib.library WHERE isbn = "  + isbn + ";";
     let result = pool.query(sql);
-    //TODO - if item not in db
+    //if item not in db
     if(!result){
         //request item data from external api
         let apiURL = 'https://api2.isbndb.com/book/';
@@ -224,8 +227,8 @@ app.put("/api/item/:id", async (req, res) => {
           }); //credit: https://isbndb.com/apidocs/v2
         
         let format;
-        if(result.format == book){
-          //TODO - Check what type of 'format' is returned by ex. api
+        if(result.format == "book"){
+          //Check what type of 'format' is returned by ex. api
           format = 1;
         }
         else
@@ -252,7 +255,7 @@ app.put("/api/item/:id", async (req, res) => {
         });
         
       }
-    //TODO - update user quantity
+    //update user quantity
     sql = "SELECT id FROM lib.library WHERE lib.library.isbn = " + isbn + ";";
     let libID = await pool.query(sql);
     sql = "UPDATE lib.lookup SET lib.lookup.qty = lib.lookup.qty + 1" 
@@ -281,24 +284,50 @@ app.put("/api/item/:id", async (req, res) => {
 //END PUT//
 
 //DELETE//
-//TODO - delete library item
+//delete library item
 app.delete("/api/item/:id", async (req, res) => {
+  try{
     //TODO - verify login info
-    if(req.session)
+    if(req.session){
       let sess = req.session.cookie.path;
+      let isbn = req.session.cookie.path;
+    }
     else{
       res.send("Please log in.")
       break;
     }
     //TODO - sanitize input
 
-    //TODO - query db: delete user's item row in composite key table
+    //query db: delete user's item row in composite key table
     //check if user row exists
-    let sql = "SELECT " + ";";
-      //yes - decrement
-        //TODO - if decrements to zero, delete row
-      //no - skip
-    //TODO - return result
+    let sql = "SELECT lib.library.id, lib.lookup.qty" + 
+              "FROM lib.lookup" + 
+              "INNER JOIN lib.library ON lib.lookup .item_id = lib.library.id" + 
+              "WHERE isbn = " + isbn + " AND user_id = " + sess + ";";
+    let result = pool.query(sql);
+    //decrement
+    if(result[1] > 0){
+      sql = "UPDATE lib.lookup" + 
+            "SET qty = qty - 1" +
+            "WHERE user_id = " + sess + "AND item_id = " + result[0] + ";";
+
+      //if decrements to zero, delete row
+      if(result[1] - 1 == 0){
+        sql = "DELETE FROM lib.lookup" +
+              "WHERE user_id = " + sess + "AND item_id = " + result[0] + ";";
+      }
+
+      pool.query(sql);
+    }
+      
+    //return result
+    res.send("Deletion succesful.")
+  }
+  catch(err){
+    console.error(err);
+    console.log(err);
+    res.send("Error: " + err); //TODO - edit response for presentation to user 
+  }
 });
 //END DELETE//
 
@@ -363,17 +392,17 @@ app.get("/api/user/logout", async (req, res) => {
 //end logout
 //create user
 app.put("/api/user/newuser", async (req, res) => {
-  /*try{
-    let inserted = false;
+  try{
     var hash = "";
     //TODO - sanatize input
     let username = req.username;
     let password = req.password;
     let name_first = req.name_first;
     let name_last = req.name_last;
+    
     //query db -- store username, h_password, first and last names
     bcrypt.hash(password, 10, (err, hash) => {
-      const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4)";
+      const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4);";
       const params = [username, h_password, name_first, name_last];
   
       pool.query(sql, params, (err, result) => {
@@ -382,24 +411,16 @@ app.put("/api/user/newuser", async (req, res) => {
           console.log(err);
         }
         else {
-          inserted = true;
+          res.send("User Created.")
         }
       });
-    }
-
-    //redirect to login  
-    if(inserted){  
-      res.writeHead(302, {
-        'Location':'/api/user/login'
-      });
-      //res.redirect("/api/user/login");
-    }
+    });
   }
   catch(err){
     console.log("Error with new user on API");
     console.log(err);
     res.send("Error creating new user;")
-  }*/
+  }
 });
 //end create user
 //////////////////// END USERS /////////////////////////////////////////
