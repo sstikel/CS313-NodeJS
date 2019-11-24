@@ -10,7 +10,6 @@
 const http = require("http");
 const express = require("express");
 const router = express.Router();
-//var conString = 'postgres://@localhost/pg_demo_db';
 const bodyParser = require("body-parser");
 const{Pool} = require('pg');
 //Pool -- https://node-postgres.com/api/pool
@@ -23,6 +22,9 @@ var app = express();
 app.use(bodyParser.json());
 const dbConnection = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: dbConnection});
+app.set("views", "views");
+app.set("view engine", "ejs");
+app.use(express.static("public")); //let all files in 'public' be used anyways
 
 ////db connection ////
 ////session////
@@ -43,6 +45,7 @@ app.use(express.json());
 //end
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
+console.log("Server on port: " + port);
 
 //Homepage from CS313
 app.get("/home", function(req, res){
@@ -83,6 +86,7 @@ fetch('https://api2.isbndb.com/book/9781934759486', {headers: headers})
 //return full library
 app.get("/api/book", async (req, res) => {
   try{
+    console.log("return full library reached.");
     //TODO - sanatize input
 
     //verify login info
@@ -399,7 +403,7 @@ app.put("/api/user/newuser", async (req, res) => {
     let password = req.password;
     let name_first = req.name_first;
     let name_last = req.name_last;
-    
+
     //query db -- store username, h_password, first and last names
     bcrypt.hash(password, 10, (err, hash) => {
       const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4);";
