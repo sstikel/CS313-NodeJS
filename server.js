@@ -83,6 +83,7 @@ fetch('https://api2.isbndb.com/book/9781934759486', {headers: headers})
   });
 */
 
+/*
 //return full library
 app.get("/api/book", async (req, res) => {
   try{
@@ -113,7 +114,9 @@ app.get("/api/book", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user
   }
 });
+*/
 
+/*
 //return specific library item
 app.get("/api/book/:id", async (req, res) => {
   try{
@@ -155,7 +158,9 @@ app.get("/api/book/:id", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user
   }
 });
+*/
 
+/*
 //return general search for specific item
 app.get("/api/book/:param", async (req, res) => {
     //TODO - verify login info
@@ -164,6 +169,7 @@ app.get("/api/book/:param", async (req, res) => {
     //TODO - query db for item search results in user library
     //TODO - return result
 });
+*/
 
 //TODO - /api/movie
 //TODO - /api/movie/:id
@@ -171,7 +177,7 @@ app.get("/api/book/:param", async (req, res) => {
 
 //END GET//
 
-/*
+/* Not really needed if using PUT similarly.
 //POST//
 //create library item
 app.post("/api/item", async (req, res) => {
@@ -192,6 +198,7 @@ app.post("/api/item", async (req, res) => {
 */
 
 //PUT//
+/*
 //create library item
 //update quantity of user item
 app.put("/api/item/:id", async (req, res) => {
@@ -285,9 +292,11 @@ app.put("/api/item/:id", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user
   }
 });
+*/
 //END PUT//
 
 //DELETE//
+/*
 //delete library item
 app.delete("/api/item/:id", async (req, res) => {
   try{
@@ -333,6 +342,7 @@ app.delete("/api/item/:id", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user 
   }
 });
+*/
 //END DELETE//
 
 ////  END LIBRARY API ////
