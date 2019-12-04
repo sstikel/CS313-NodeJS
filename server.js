@@ -52,6 +52,11 @@ app.get("/home", function(req, res){
   res.redirect("home.html");
 });
 
+//Test Page for Library App
+app.get("/testPage", (req, res) => {
+  res.redirect("testWebpage.html")
+});
+
 //////////////////////////////  LIBRARY API //////////////////////////////
 //GET//
 
@@ -348,34 +353,42 @@ app.delete("/api/item/:id", async (req, res) => {
 ////  END LIBRARY API ////
 //////////////////// USERS /////////////////////////////////////////
 //login
-app.get("/api/user/login", async (req, res) => {
+app.post("/api/user/login", async (req, res) => {
   try{
     //retrieve login info from req
     let sess = req.session;
+    let userData = req.body;
+    console.log("userData:");
+    console.log(userData);
     //TODO - sanitize user input
     //query db 
-    let username = req.username;
-    let sql = 'SELECT id, h_password FROM lib.user WHERE username=' + username;
+    let username = userData.username;
+    let password = userData.password;
     let h_password;
+
+    let sql = 'SELECT id, h_password FROM lib.user WHERE username=' + username;
     pool.query(sql, username, (err, result) => {
       if(err){
         console.log("Error with DB(login/username)");
         console.log(err);
       }    
       else
+        //TODO - iterate through all results
+              //may have more than one username that matches
         h_password = result.rows[0].h_password;
-    });
-    //compare hashed passwords
-    let match = await bcrypt.compare(req.password, h_password);
-    if(match){
-      //set cookie
-      let userID = result.rows[0].id;
-      sess.cookie.path(userID);
-       //return result
-      res.send("User Authenticated.");
-    }
-    else
-      res.send("Login info incorrect.")   
+        
+        //compare hashed passwords
+        let match = bcrypt.compare(password, h_password);
+        if(match){
+          //set cookie
+          let userID = result.rows[0].id;
+          sess.cookie.path(userID);
+          //return result
+          res.send("User Authenticated.");
+          }
+          else
+            res.send("Login info incorrect.")   
+    });    
   }
   catch (err){
     console.log("Error with API login");

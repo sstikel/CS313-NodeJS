@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script>
+    function sendRequest(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("demo").innerHTML = xhttp.responseText;
+        }
+      };
+      xhttp.open("GET", "package.json" /*"/api/book"*/, true);
+      xhttp.send();
+  }
+  </script>
+  <title>Test Page</title>
+</head>
+<body>
+  <h1>Welcome to the Test Page</h1>
+  <br>
+
+  <h3>Please fill out the http request form:</h3>
+  <form action="/api/user/login" method="POST">
+    <input type="text" name="username" placeholder="Username"><br>
+    <input type="password" name="password" placeholder="Password"><br>
+    <input type="submit">
+  </form>
+  <br>
+
+  <button onclick="sendRequest()">Click Me!</button>
+  <br>
+
+  <h3>HTTP response</h3>
+  <div id="demo"></div>
+  <br>
+</body>
+<footer>
+  <a href="/home">Home Page</a>
+</footer>
+</html>
