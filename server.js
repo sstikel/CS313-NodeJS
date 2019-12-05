@@ -19,7 +19,12 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 var app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json({
+  extended: true
+}));
 const dbConnection = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: dbConnection});
 app.set("views", "views");
@@ -39,7 +44,7 @@ app.use(session({
   saveUninitialized: false,
   resave: true,
   store: new FileStore()}));
-app.use(express.urlencoded());
+//app.use(express.urlencoded());
 app.use(express.json());
 
 //end
