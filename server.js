@@ -19,19 +19,16 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 var app = express();
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json({
-  extended: true
-}));
+app.use(bodyParser.json());
 const dbConnection = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: dbConnection});
 app.set("views", "views");
 app.set("view engine", "ejs");
 app.use(express.static("public")); //let all files in 'public' be used anyways
 
-////db connection ////
+require('es6-promise').polyfill();
+const fetch = require('isomorphic-fetch');
+
 ////session////
 //https://codeforgeek.com/manage-session-using-node-js-express-4/
 app.use(require('morgan')('dev'));
@@ -44,13 +41,14 @@ app.use(session({
   saveUninitialized: false,
   resave: true,
   store: new FileStore()}));
-//app.use(express.urlencoded());
+app.use(express.urlencoded({
+  extended: true
+}));
 app.use(express.json());
-
-//end
 
 const port = process.env.PORT || 5000; //checks for heroku port OR use 5000
 console.log("Server on port: " + port);
+//end
 
 //Homepage from CS313
 app.get("/home", function(req, res){
@@ -93,25 +91,26 @@ fetch('https://api2.isbndb.com/book/9781934759486', {headers: headers})
   });
 */
 
-/*
+
 //return full library
 app.get("/api/book", async (req, res) => {
   try{
     console.log("return full library reached.");
+    let sess;
     //TODO - sanatize input
 
     //verify login info
-    if(req.session)
-      let sess = req.session.cookie.path;
+    if(req.session){
+       sess = req.session.token; 
+    }
     else{
       res.send("Please log in.");
-      break;
     }
-      
+    
     //query db for items
     let sql = "SELECT lib.library.title, lib.library.sub_title, lib.library.author, lib.library.year, lib.library.isbn, lib.lookup.qty " +
-              "FROM lib.lookup LEFT INNER JOIN lib.library ON (lib.lookup.user = lib.library.user)" +
-              "WHERE user = " + sess + ";";
+              "FROM lib.library LEFT JOIN lib.lookup ON (lib.lookup.item_id = lib.library.id)" +
+              "WHERE user_id = " + sess + ";"; //Verified - works
 
     const result = await pool.query(sql);
     let json = JSON.stringify(result);
@@ -124,43 +123,48 @@ app.get("/api/book", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user
   }
 });
-*/
 
-/*
+
+
 //return specific library item
 app.get("/api/book/:id", async (req, res) => {
   try{
+    let sess;
+
     //verify login info
     if(req.session)
-      let sess = req.session.cookie.path;
+      sess = req.session.token;
     else{
-      res.send("Please log in.")
-      break;
+      res.send("Please log in.");
     }
     //TODO - sanitize input
 
     //request item info from external api
-    let isbn = req.param.id; //extract from url
+    let isbn = req.params.id; //extract from url
     let apiURL = 'https://api2.isbndb.com/book/';
+    let data;
     
     let headers = {
       "Content-Type": 'application/json',
       "Authorization": 'YOUR_REST_KEY'
     }
     
-    fetch(apiURL + isbn + "?with_prices=0", {headers: headers})
+    //TODO - 'explicit deny' problem with external API
+    fetch(apiURL + isbn, {headers: headers})
       .then(response => {
           return response.json();
       })
       .then(json => {
-          //console.log(json)
+          console.log("ex API json:");
+          console.log(json);
+          data = json;
       })
       .catch(error => {
           console.error('Error:', error)
       }); //credit: https://isbndb.com/apidocs/v2
 
       //return result
-      res.send(json);
+      res.send(data);
     }
   catch(err){
     console.error(err);
@@ -168,18 +172,78 @@ app.get("/api/book/:id", async (req, res) => {
     res.send("Error: " + err); //TODO - edit response for presentation to user
   }
 });
-*/
 
-/*
+
 //return general search for specific item
-app.get("/api/book/:param", async (req, res) => {
-    //TODO - verify login info
-    //TODO - sanitize input
+app.post("/api/book/search", async (req, res) => {
     //TODO - request item search results from external api
     //TODO - query db for item search results in user library
     //TODO - return result
+    try{
+    let sess;
+
+    //verify login info
+    if(req.session)
+      sess = req.session.token;
+    else{
+      res.send("Please log in.");
+    }
+    //TODO - sanitize input
+
+    //request item info from external api
+    let input = req.body;
+    let apiURL = 'https://api2.isbndb.com/search/books?';
+    let data;
+
+    //TODO - parse search request
+    let author;
+    let title;
+
+    if(input.author){
+      author = encodeURIComponent(input.author.trim());
+    }
+    if(input.title){
+      title = encodeURIComponent(input.title.trim());
+    }
+    if(author && title){
+      apiURL += "author=" + author;
+      apiURL += "&";
+      apiURL +="text=" + title;
+    }
+    else{
+      res.send("No search info inputted.")
+    }
+
+
+    let headers = {
+      "Content-Type": 'application/json',
+      "Authorization": 'YOUR_REST_KEY'
+    }
+    
+    //TODO - 'explicit deny' problem with external API
+    fetch(apiURL, {headers: headers})
+      .then(response => {
+          return response.json();
+      })
+      .then(json => {
+          console.log("ex API json:");
+          console.log(json);
+          data = json;
+      })
+      .catch(error => {
+          console.error('Error:', error)
+      }); //credit: https://isbndb.com/apidocs/v2
+
+      //return result
+      res.send(data);
+    }
+  catch(err){
+    console.error(err);
+    console.log(err);
+    res.send("Error: " + err); //TODO - edit response for presentation to user
+  }
 });
-*/
+
 
 //TODO - /api/movie
 //TODO - /api/movie/:id
@@ -223,7 +287,7 @@ app.put("/api/item/:id", async (req, res) => {
     //TODO - sanitize input
 
     //query db: 
-    let isbn = req.session.cookie.path;
+    let isbn = req.session.token; //???
     let sql = "SELECT title, isbn FROM lib.library WHERE isbn = "  + isbn + ";";
     let result = pool.query(sql);
     //if item not in db
@@ -370,30 +434,38 @@ app.post("/api/user/login", async (req, res) => {
     let username = userData.username;
     let password = userData.password;
     let h_password;
+    let userID;
 
+    //TODO - uncomment when deploying
+    /*
     let sql = 'SELECT id, h_password FROM lib.user WHERE username=' + username;
     pool.query(sql, username, (err, result) => {
       if(err){
         console.log("Error with DB(login/username)");
         console.log(err);
       }    
-      else
+      else{
         //TODO - iterate through all results
               //may have more than one username that matches
-        h_password = result.rows[0].h_password;
-        
+        h_password = result.rows[0].h_password; //TODO - error here, not connecting to db while debugging
+        userID = result.rows[0].id;
+      }
+      */
+     //TODO - remove hashed password
+      h_password = "$2b$10$uQRzM87mk89yHII79OjcGurxq866fmcA8FfWS3j6HeWNmRw6lY7F";
+
         //compare hashed passwords
         let match = bcrypt.compare(password, h_password);
         if(match){
           //set cookie
-          let userID = result.rows[0].id;
-          sess.cookie.path(userID);
+          userID = 8; //TODO - remove, hard coded debug value
+          sess.token = userID;
           //return result
           res.send("User Authenticated.");
-          }
-          else
-            res.send("Login info incorrect.")   
-    });    
+        }
+        else
+          res.send("Login info incorrect.")   
+    //});    
   }
   catch (err){
     console.log("Error with API login");
@@ -423,17 +495,19 @@ app.get("/api/user/logout", async (req, res) => {
 });
 //end logout
 //create user
-app.put("/api/user/newuser", async (req, res) => {
+app.post("/api/user/newuser", async (req, res) => {
   try{
     var hash = "";
     //TODO - sanatize input
-    let username = req.username;
-    let password = req.password;
-    let name_first = req.name_first;
-    let name_last = req.name_last;
+    let input = req.body;
+    let username = input.username;
+    let password = input.password;
+    let name_first = input.fName;
+    let name_last = input.lName;
+    let h_password;
 
     //query db -- store username, h_password, first and last names
-    bcrypt.hash(password, 10, (err, hash) => {
+    bcrypt.hash(password, 10, (err, h_password) => {
       const sql = "INSERT INTO lib.user (username, h_password, name_first, name_last) VALUES ($1, $2, $3, $4);";
       const params = [username, h_password, name_first, name_last];
   

@@ -27,3 +27,6 @@ DROP TABLE lib.genre;
 
 DROP TABLE lib.author;
 
+INSERT INTO lib.lookup (user_id, item_id, qty)
+VALUES (8, 1, 1), (8, 2, 2)
+;
